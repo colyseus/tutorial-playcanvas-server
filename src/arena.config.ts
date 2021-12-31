@@ -7,7 +7,7 @@ export default Arena({
     getId: () => "PlayCanvas Colyseus Demo App",
 
     initializeGameServer: (gameServer) => {
-        gameServer.define('playcanvas_room', GameRoom);
+        gameServer.define('StrawberryBubblegum', GameRoom);
 
     },
 
