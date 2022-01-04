@@ -1,51 +1,45 @@
-import { Room, Client } from "@colyseus/core";
-import {Players, PlayerState} from "./schema/PlayerState";
+import {Room, Client} from "@colyseus/core";
+import {GameState, Player} from "./schema/GameState";
 
-export class GameRoom extends Room<Players> {
+export class GameRoom extends Room<GameState> {
 
-  maxClients = 2;
+    maxClients = 2;
 
-  onCreate (options: any) {
-    this.setState(new Players());
-    this.onMessage("updatePosition", (client, msg) => {
-      console.log("update received -> ");
-      console.debug(msg);
-      for (let playerId in msg.players) {
-        const playerData = this.state.players.get(playerId);
-        const newPlayerData = msg.players[playerId];
-        playerData.x = newPlayerData.x;
-        playerData.y = newPlayerData.y;
-        playerData.z = newPlayerData.z;
-      }
-      this.broadcast("updatePosition", this.state);
-    });
-  }
+    onCreate(options: any) {
+        this.setState(new GameState());
 
-  onJoin(client: Client, options: any) {
-    const newPlayer = new PlayerState();
-    if(this.state.players.size == 1) {
-      newPlayer.x = 1;
-      newPlayer.y = 1;
-      newPlayer.z = 0;
-    } else {
-      newPlayer.x = 0;
-      newPlayer.y = 0;
-      newPlayer.z = 0
+        this.onMessage("updatePosition", (client, data) => {
+            console.log("update received -> ");
+            console.debug(JSON.stringify(data));
+            const player = this.state.players.get(data["id"]);
+            player.x = data["x"];
+            player.y = data['y'];
+            player.z = data["z"];
+            this.state.players.set(client.sessionId, player);
+        });
     }
-    this.state.players.set(client.sessionId, newPlayer);
-    console.log(client.sessionId, "joined!");
-    console.debug(this.state.players.toJSON());
-    this.broadcast("joined", this.state);
-  }
 
-  onLeave (client: Client, consented: boolean) {
-    this.state.players.delete(client.sessionId);
-    console.log(client.sessionId, "left!");
-    console.debug(this.state.players.toJSON());
-    this.broadcast("playerLeft", this.state);
-  }
+    onJoin(client: Client, options: any) {
+        const newPlayer = new Player();
+        if (this.state.players.size == 1) {
+            newPlayer.x = 1;
+            newPlayer.y = 1.031;
+            newPlayer.z = 0;
+        } else {
+            newPlayer.x = 0;
+            newPlayer.y = 1.031;
+            newPlayer.z = 0
+        }
+        this.state.players.set(client.sessionId, newPlayer);
+        console.log(client.sessionId, "joined!");
+    }
 
-  onDispose() {
-    console.log("room", this.roomId, "disposing...");
-  }
+    onLeave(client: Client, consented: boolean) {
+        this.state.players.delete(client.sessionId);
+        console.log(client.sessionId, "left!");
+    }
+
+    onDispose() {
+        console.log("room", this.roomId, "disposing...");
+    }
 }
