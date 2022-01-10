@@ -15,7 +15,6 @@ export class GameRoom extends Room<GameState> {
             player.x = data["x"];
             player.y = data['y'];
             player.z = data["z"];
-            this.state.players.set(client.sessionId, player);
         });
     }
 
