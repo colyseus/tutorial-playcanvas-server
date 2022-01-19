@@ -11,6 +11,9 @@
     "clean": "node node_modules/rimraf/bin lib",
     "test": "mocha --require ts-node/register test/**_test.ts --exit --timeout 15000"
   },
+  "engines": {
+    "node": ">= 14.x"
+  },
   "author": "",
   "license": "UNLICENSED",
   "bugs": {
