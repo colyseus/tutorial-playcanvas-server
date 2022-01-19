@@ -1,12 +1,12 @@
-import {Room, Client} from "@colyseus/core";
-import {GameState, Player} from "./schema/GameState";
+import { Room, Client } from "@colyseus/core";
+import { MyRoomState, Player } from "./schema/MyRoomState";
 
-export class GameRoom extends Room<GameState> {
+export class MyRoom extends Room<MyRoomState> {
 
     maxClients = 5;
 
     onCreate(options: any) {
-        this.setState(new GameState());
+        this.setState(new MyRoomState());
 
         this.onMessage("updatePosition", (client, data) => {
             console.log("update received -> ");

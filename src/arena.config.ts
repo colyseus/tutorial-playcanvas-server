@@ -1,14 +1,13 @@
 import Arena from "@colyseus/arena";
 import { monitor } from "@colyseus/monitor";
 
-import { GameRoom } from "./rooms/GameRoom";
+import { MyRoom } from "./rooms/MyRoom";
 
 export default Arena({
     getId: () => "PlayCanvas Colyseus Demo App",
 
     initializeGameServer: (gameServer) => {
-        gameServer.define('StrawberryBubblegum', GameRoom);
-
+        gameServer.define('my_room', MyRoom);
     },
 
     initializeExpress: (app) => {
